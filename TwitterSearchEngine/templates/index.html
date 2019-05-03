@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <style>
+    body{
+        background-image: url("/static/back.jpg");
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-size: cover;
+        height:580px;
+        width:100%;
+    }
+        #teamname{
+            font-family: "Lucida Console", Monaco, monospace;
+            font-size: 90px;
+            letter-spacing: -0.4px;
+            word-spacing: 2px;
+            color: #010605;
+            font-weight: 700;
+            text-decoration: none;
+            font-style: normal;
+            font-variant: normal;
+            text-transform: capitalize;
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <br><br>
+    <h1 id="teamname">SQUAD</h1><br><br>
+        <div class="row">/
+            <form method="POST">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-7"> <input type="text" name="searchvalue" class="form-control" required placeholder="Search Tweets"></div>
+                <div class="col-sm-3"><button type="submit" class="btn btn-primary">Search</button></div>
+            </form>
+            </div>
+    </div>
+</body>
+</html>

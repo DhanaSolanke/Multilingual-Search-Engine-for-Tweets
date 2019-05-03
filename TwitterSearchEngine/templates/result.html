@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .panel-heading {
+
+            font-size: 19px;
+            font-weight: 500;
+
+        }
+        #teamname {
+
+            font-size: 35px;
+            font-weight: 700;
+
+        }
+        #screen_name {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 16px;
+            color: #000000;
+            font-weight: 400;
+            text-decoration: none solid rgb(68, 68, 68);
+            font-style: normal;
+            font-variant: normal;
+            text-transform: capitalize;
+        }
+
+        #date {
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            font-size: 13px;
+            color: #8e5ea2;
+            font-weight: 300;
+            font-style: normal;
+            font-variant: normal;
+            text-transform: capitalize;
+        }
+
+        .filters {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 19px;
+            letter-spacing: 0.4px;
+            word-spacing: -2.6px;
+            color: #c45850;
+            font-weight: 700;
+            text-decoration: underline solid rgb(68, 68, 68);
+            font-style: italic;
+            font-variant: normal;
+            text-transform: none;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Results</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBE34WBrpiAXit9qXhpzCE1N3xTOXsnJXM&callback=initMap"></script>
+    <script>
+    function initMap(data) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 1,
+          center: new google.maps.LatLng(0, 0)
+        });
+
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(48.8589507,2.27702),
+          map: map,
+          title: (data[0])
+        });
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(28.6472799,76.8130688,10),
+          map: map,
+          title: (data[1])
+        });
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(40.6976701,-74.2598699),
+          map: map,
+          title: data[2]
+        });
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(13.7251088,100.3529121),
+          map: map,
+          title: data[3]
+        });
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(19.3910038,-99.2836998),
+          map: map,
+          title: data[3]
+        });
+      }
+
+        function GetData(){
+            var data = "{{cityTweetCount}}"
+            data = data.split("-");
+            initMap(data);
+
+             var data = "{{landata}}"
+             data = data.split("-");
+             var final = [0,0,0,0,0]
+             for (var i = 0; i < data.length; i++){
+                final[i] = parseInt(data[i])
+             }
+             console.log("final");
+             console.log(final);
+             var ctx = document.getElementById("topmentions");
+                    var myLineChart = new Chart(ctx, {
+                        type: 'line',
+                        options: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltips: {
+                                    callbacks: {
+                                       label: function(tooltipItem) {
+                                              return tooltipItem.yLabel;
+                                       }
+                                    }
+                                }
+                        },
+                         data: {
+                            datasets: [{
+                                data: final,
+                                label: "Tweet Count Analysis by Languages",
+                                borderColor: "#c45850",
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                fill: true
+                            }],
+                            labels: ['English','Spanish','French','Thai','Hindi']
+
+                           }
+                          });
+
+                    var data = "{{topicData}}"
+                     data = data.split("-");
+                     var final = [0,0,0,0,0]
+                     for (var i = 0; i < data.length; i++){
+                        final[i] = parseInt(data[i])
+                     }
+                    console.log(final)
+                    labels = ['Crime', 'Politics', 'Environment', 'Infrastructure', 'Social Unrest']
+
+                     var ctx = document.getElementById("tophashtags");
+                    var myLineChart = new Chart(ctx, {
+                        type: 'line',
+                        options: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltips: {
+                                    callbacks: {
+                                       label: function(tooltipItem) {
+                                              return tooltipItem.yLabel;
+                                       }
+                                    }
+                                }
+                        },
+                         data: {
+                            datasets: [{
+                                data: final,
+                                label: "Tweet Count Analysis by Topics",
+                                borderColor: "#8e5ea2",
+                                backgroundColor: 'rgba(142,94,162, 0.2)',
+                                fill: true
+                            }],
+                            labels: labels
+
+                           }
+                          });
+
+        }
+
+    </script>
+
+</head>
+<body>
+    <div>
+        <div style="margin-left: 60px;margin-right: 60px;">
+        <form method="POST">
+          <br>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label id="teamname">Team Squad</label>
+
+                    </div>
+                    <div class="col-md-5">
+                        <br>
+
+                        <input type="text" name="searchvalue" id="searchvalue" class="form-control form-control-lg" size="30" value="{{text}}">
+
+                    </div>
+                    <div class="col-md-5"><br>
+                        <button type="submit" class="btn btn-primary">Search</button>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="GetData()">
+                              Overall Data Analytics
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document" style="height:700px;width:1500px;">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Overall Analysis</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-4 container">
+                                            <h4>Count of Tweets by Cities</h4>
+                                           <div id="map" style="width: 400px; height: 300px;"></div>
+                                          </div>
+                                        <div class="col-md-4" container>
+                                            <h4>Tweet Count by Topics</h4>
+                                            <canvas id="tophashtags" width="800" height="500"></canvas>
+                                        </div>
+                                        <div class="col-md-4" container>
+                                            <h4>Tweet Count by Languages</h4>
+                                            <canvas id="topmentions" width="800" height="500"></canvas>
+
+                                        </div>
+                                    </div>
+
+
+
+                                  </div>
+                                  <div class="modal-footer">
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                    </div>
+                </div>
+                <br>
+            <div class="row">
+                <div class="col-md-2">
+
+                    <div class="panel panel-primary">
+                      <div class="panel-heading">Advanced Search</div>
+                      <div class="panel-body">
+                          <h4 class="filters">Topics</h4>
+                        <input type="checkbox" name="topic" value="crime" id="crime">Crime<br>
+                        <input type="checkbox" name="topic" value="politics" id="politics">Politics<br>
+                        <input type="checkbox" name="topic" value="infra" id="infra">Infrastructure<br>
+                        <input type="checkbox" name="topic" value="environment" id="environment">Environment<br>
+                        <input type="checkbox" name="topic" value="socialunrest" id="socialunrest">Social Unrest<br>
+
+                            <h4 class="filters">Locations</h4>
+
+                                <input type="checkbox" name="city" value="nyc" id="nyc">New York City<br>
+                                <input type="checkbox" name="city" value="delhi" id="delhi">Delhi<br>
+                                <input type="checkbox" name="city" value="paris" id="paris">Paris<br>
+                                <input type="checkbox" name="city" value="mexicocity" id="mexicocity">Mexico City<br>
+                                <input type="checkbox" name="city" value="bangkok" id="bangkok">Bangkok<br>
+
+                             <h4 class="filters">Languages</h4>
+
+                                <input type="checkbox" name="lang" id="en" value="en">English<br>
+                                <input type="checkbox" name="lang" id="fr" value="fr">French<br>
+                                <input type="checkbox" name="lang" id="th" value="th">Thai<br>
+                                <input type="checkbox" name="lang" id="hi" value="hi">Hindi<br>
+                                <input type="checkbox" name="lang" id="es" value="es">Spanish<br>
+
+                            <h4 class="filters">Dates</h4>
+                           <div class="form-group">
+
+                            <select class="selectpicker form-control" id="dateSelector" name="dateSelector">
+                                <option value="none">-Select-</option>
+                              <option value="lastweek">Last week</option>
+                              <option value="lastmonth">Last Month</option>
+                                <option value="last6month">Last 6 Months</option>
+                            </select>
+                          </div>
+                      </div>
+                    </div>
+
+
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="panel panel-primary">
+                          <div class="panel-heading">Results</div>
+                          <div class="panel-body">
+                               {%for re in result%}
+                            <div>
+                                <img src="{{re.image}}" style="border-radius: 50%;"/>
+                                <span id="screen_name">{{re.name}}</span><br>
+                                <br><span id="tweet_text">{{re.text}}</span>
+                                <br>
+                                <a href="https://twitter.com/anyuser/status/{{re.id}}" target="_blank">"https://twitter.com/anyuser/status/{{re.id}}"</a>
+                                <br>
+                                <span id="date">{{re.date}}</span>
+                                </p>
+                                <hr />
+                            </div>
+                        {% endfor %}
+                          </div>
+                    </div>
+
+
+                </div>
+                <div class="col-md-4">
+
+                     <div class="panel panel-primary">
+                      <div class="panel-heading">Analysis</div>
+                      <div class="panel-body">
+
+                          <canvas id="sentimentChart" width="800" height="400"></canvas><br>
+                            <script>
+
+                                data = {
+                                datasets: [{
+                                    data: {{sentimentData}},
+                                    backgroundColor : ["#3e95cd", "#8e5ea2","#3cba9f"]
+                                                            }],
+
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: ["Positive", "Negative", "Neutral"]
+                            };
+                            options = {
+                            scales: {
+                                    xAxes: [{
+                                        gridLines: {
+                                            display:false
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        gridLines: {
+                                            display:false
+                                        }
+                                    }]
+                                },
+                                     title: {
+                                    display: true,
+                                    text: 'Sentiment Analysis for Tweets'
+                                    }
+                                };
+                                new Chart(document.getElementById("sentimentChart"), {
+                                    type: 'pie',
+                                    data: data,
+                                    options : options
+                                });
+                            </script>
+
+
+
+                           <canvas id="hashtagsChart" width="800" height="400"></canvas><br>
+                            <script>
+                            var final = []
+                            var arr = String("{{hashkey}}")
+                            var ar = arr.split(" ")
+                            for(var i=0; i<ar.length; i++) {
+                               final.push(ar[i]);
+                            }
+                                data = {
+                                datasets: [{
+                                    data: {{hashval}},
+                                    backgroundColor : [ "#8e5ea2","#3cba9f","#e8c3b9","#c45850",'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red',
+                                        'silver', 'teal', 'white', 'yellow']
+                                }],
+
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: final
+                            };
+
+                            options = {scales: {
+                                    xAxes: [{
+                                        gridLines: {
+                                            display:false
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        gridLines: {
+                                            display:false
+                                        }
+                                    }]
+                                },
+                            legend: { display: false },
+                                     title: {
+                                    display: true,
+                                    text: 'Top 5 Hashtags'
+                                    },
+                                    scales: {xAxes: [{
+                                        gridLines: {
+                                            display:false
+                                        }
+                                    }],
+                                        yAxes: [{
+                                                    ticks: {
+                                    beginAtZero: true
+                                },gridLines: {
+                                            display:false
+                                        }
+                                                }]
+                }
+                                };
+                                new Chart(document.getElementById("hashtagsChart"), {
+                                    type: 'bar',
+                                    data: data,
+                                    options : options
+                                });
+                            </script>
+                            <canvas id="mentionsChart" width="800" height="400"></canvas>
+                            <script>
+                            var final = []
+                            var arr = String("{{mentkey}}")
+                            var ar = arr.split("-")
+                            for(var i=0; i<ar.length; i++) {
+                               final.push(ar[i]);
+                            }
+
+                            data = {
+                                datasets: [{
+                                    data: {{menval}},
+                                    backgroundColor : ["#8e5ea2","#3cba9f","#e8c3b9","#c45850",'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red',
+                                        'silver', 'teal', 'white', 'yellow']
+                                }],
+
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: final
+                            };
+
+                            options = {
+                            legend: { display: false },
+                                     title: {
+                                    display: true,
+                                    text: 'Top 5 Mentions'
+                                    },
+                                    scales: {xAxes: [{
+                                    ticks: {
+                                        autoSkip: true,
+                                        maxRotation: 0,
+                                        minRotation: 0
+                                    },
+                                        gridLines: {
+                                            display:false
+                                        }
+                                    }],
+                                        yAxes: [{
+                                                    ticks: {
+                                    beginAtZero: true
+                                },gridLines: {
+                                            display:false
+                                        }
+                                                }]
+                }
+                                };
+                                new Chart(document.getElementById("mentionsChart"), {
+                                    type: 'bar',
+                                    data: data,
+                                    options : options
+                                });
+                            </script>
+                      </div>
+                    </div>
+
+
+                </div>
+                </div>
+                </div>
+            </form>
+            </div>
+    </div>
+    <script>
+            var langList = String("{{lang}}")
+            console.log(langList)
+            if (langList.indexOf('-') > -1)
+            {
+              var cities = langList.split("-")
+              for (var i = 0; i < cities.length; i++){
+                document.getElementById(cities[i]).checked = true;
+               }
+            }
+            else if (langList == "") {
+
+            }
+            else {
+                document.getElementById(langList).checked = true;
+            }
+
+            var langList = String("{{topics}}")
+            console.log(langList)
+            if (langList.indexOf('-') > -1)
+            {
+              var cities = langList.split("-")
+              for (var i = 0; i < cities.length; i++){
+                document.getElementById(cities[i]).checked = true;
+               }
+            }
+            else if (langList == "") {
+
+            }
+            else {
+                document.getElementById(langList).checked = true;
+            }
+
+            var langList = String("{{cities}}")
+            console.log(langList)
+            if (langList.indexOf('-') > -1)
+            {
+              var cities = langList.split("-")
+              for (var i = 0; i < cities.length; i++){
+                document.getElementById(cities[i]).checked = true;
+               }
+            }
+            else if (langList == "") {
+
+            }
+            else {
+                document.getElementById(langList).checked = true;
+            }
+
+            var textToFind = String("{{timePeriod}}");
+            var dd = document.getElementById('dateSelector');
+            for (var i = 0; i < dd.options.length; i++) {
+                if (dd.options[i].value === textToFind) {
+                    dd.selectedIndex = i;
+                    break;
+                }
+            }
+
+        </script>
+</body>
+</html>
